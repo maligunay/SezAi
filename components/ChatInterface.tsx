@@ -20,7 +20,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ knowledgeBase = []
     const greeting: Message = {
       id: 'init-1',
       role: Role.MODEL,
-      text: "Merhaba! Ben Sezgisel Asistan SezAi. Bakanlık hizmetleri, mevzuat veya yüklediğiniz dokümanlarla ilgili sorularınızı cevaplayabilirim. Nasıl yardımcı olabilirim?",
+      text: "Merhaba! Ben Yapay Zeka Asistanı Bilgiç. Bakanlık hizmetleri, mevzuat veya yüklediğiniz dokümanlarla ilgili sorularınızı cevaplayabilirim. Nasıl yardımcı olabilirim?",
       timestamp: new Date()
     };
     setMessages([greeting]);
