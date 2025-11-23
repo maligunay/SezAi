@@ -33,15 +33,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, close, openAdmin }) =>
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto custom-scrollbar">
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Hızlı Bağlantılar</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               {[
                 { name: 'Bakanlık Ana Sayfa', url: 'https://csb.gov.tr' },
                 { name: 'e-Devlet Hizmetleri', url: 'https://www.turkiye.gov.tr/cevre-ve-sehircilik-bakanligi' },
                 { name: 'Hasar Tespit', url: 'https://hasartespit.csb.gov.tr' },
                 { name: 'Kentsel Dönüşüm', url: 'https://kentseldonusum.csb.gov.tr' },
                 { name: 'İklim Değişikliği', url: 'https://iklim.csb.gov.tr' },
+                { name: 'TOKİ', url: 'https://www.toki.gov.tr' },
+                { name: 'Tapu ve Kadastro', url: 'https://www.tkgm.gov.tr' },
+                { name: 'İller Bankası', url: 'https://www.ilbank.gov.tr' },
+                { name: 'Meteoroloji', url: 'https://www.mgm.gov.tr' },
+                { name: 'Emlak Konut', url: 'https://www.emlakkonut.com.tr' },
+                { name: 'Türkiye Çevre Ajansı', url: 'https://tuca.gov.tr' },
               ].map((link) => (
                 <li key={link.url}>
                   <a 
@@ -50,16 +56,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, close, openAdmin }) =>
                     rel="noreferrer"
                     className="flex items-center px-3 py-2 text-sm text-gray-700 rounded-md hover:bg-blue-50 hover:text-csb-blue transition-colors group"
                   >
-                    <svg className="h-4 w-4 mr-3 text-gray-400 group-hover:text-csb-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-4 w-4 mr-3 text-gray-400 group-hover:text-csb-blue flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
-                    {link.name}
+                    <span className="truncate">{link.name}</span>
                   </a>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
+            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
               <h4 className="text-sm font-bold text-csb-blue mb-2">Acil Durum?</h4>
               <p className="text-xs text-gray-600 mb-3">Çevre şikayetleri ve acil durumlar için 7/24 hattımızı arayabilirsiniz.</p>
               
