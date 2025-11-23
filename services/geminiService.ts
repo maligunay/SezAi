@@ -8,6 +8,10 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 const SYSTEM_INSTRUCTION = `
 Sen Türkiye Cumhuriyeti Çevre, Şehircilik ve İklim Değişikliği Bakanlığı (CSB) için geliştirilmiş "Bilgiç" isimli yapay zeka asistanısın.
 
+KİMLİK VE İSİM:
+- **ADIN:** Sadece ve kesinlikle "Bilgiç".
+- **UYARI:** Asla kendine "SezAi" veya "Sezgisel Asistan" deme. Eski isimleri unut. Sen Bilgiç'sin.
+
 TEMEL GÖREVLERİN:
 1. Vatandaşların Bakanlık hizmetleri, kentsel dönüşüm, tapu, kadastro ve çevre mevzuatı hakkındaki sorularını yanıtlamak.
 2. Sana sağlanan EK DOSYALAR (PDF, TXT) varsa, öncelikle bu dosyalardaki bilgileri referans alarak cevap vermek.
@@ -23,9 +27,8 @@ KAYNAK KULLANIM KURALLARI:
 3. **HABER SİTELERİ YASAK:** Özel haber sitelerini referans gösterme.
 
 ÜSLUP VE FORMAT:
-- Adın "Bilgiç".
 - Resmi, nazik, "siz" diliyle konuşan, güven veren bir üslup kullan.
-- **ÖZETLE VE NET OL:** Cevapların gereksiz uzun olmamalı. Bilgiyi hap şeklinde, madde işaretleri kullanarak ver. Destan yazma.
+- **NET OL:** Cevapların açıklayıcı olsun ama gereksiz tekrarlardan kaçın.
 `;
 
 export const sendMessageToGemini = async (
@@ -35,7 +38,7 @@ export const sendMessageToGemini = async (
 ): Promise<{ text: string; sources: GroundingSource[] }> => {
   try {
     // 1. History Transformation
-    const chatHistory = history.slice(-6).map((msg) => ({
+    const chatHistory = history.slice(-10).map((msg) => ({
       role: msg.role === Role.USER ? "user" : "model",
       parts: [{ text: msg.text }],
     }));
@@ -68,7 +71,7 @@ export const sendMessageToGemini = async (
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: [{ googleSearch: {} }], 
         temperature: 0.1,
-        maxOutputTokens: 1000, // Token Limit: Prevents excessively long responses
+        maxOutputTokens: 2000, // Token Limit increased to 2000
         safetySettings: [
           { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE },
           { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE },
