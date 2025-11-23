@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
                 <span className="text-xs sm:text-xs font-semibold text-gray-500 tracking-wider">İKLİM DEĞİŞİKLİĞİ BAKANLIĞI</span>
                 <div className="flex items-center gap-1 mt-0.5">
                     <span className="text-sm sm:text-base font-extrabold text-csb-blue tracking-tight">
-                    SezAi <span className="text-csb-red"> </span>
+                    Bilgiç <span className="text-csb-red"> </span>
                     </span>
                     <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-100 text-green-700 font-bold border border-green-200 shadow-sm">Sezgisel Asistan</span>
                 </div>
