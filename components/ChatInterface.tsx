@@ -131,8 +131,16 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ knowledgeBase = []
         {isLoading && (
            <div className="flex w-full mb-6 justify-start">
               <div className="flex flex-row items-start max-w-[80%]">
-                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-csb-red flex items-center justify-center shadow-sm mx-2 mt-1">
-                    <span className="text-white text-[10px] font-bold">CSB</span>
+                 {/* Loading Avatar - Same as MessageBubble Avatar */}
+                 <div className="flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center shadow-sm mx-2 mt-1 overflow-hidden bg-white border border-gray-100 p-1">
+                    <img 
+                        src="/sezai-logo.png" 
+                        alt="Bilgiç" 
+                        className="h-full w-full object-contain"
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://cdn-icons-png.flaticon.com/512/1786/1786548.png';
+                        }}
+                    />
                  </div>
                  <div className="bg-white px-5 py-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100">
                     <div className="flex space-x-2">

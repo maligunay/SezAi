@@ -63,8 +63,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, close, openAdmin }) =>
             <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-100">
               <h4 className="text-sm font-bold text-csb-blue mb-2">Acil Durum?</h4>
               <p className="text-xs text-gray-600 mb-3">Çevre şikayetleri ve acil durumlar için 7/24 hattımızı arayabilirsiniz.</p>
-              <a href="tel:181" className="block w-full text-center py-2 bg-csb-blue text-white text-sm font-bold rounded shadow hover:bg-blue-700 transition">
+              
+              {/* Mobile Call Button */}
+              <a href="tel:181" className="lg:hidden block w-full text-center py-2 bg-csb-blue text-white text-sm font-bold rounded shadow hover:bg-blue-700 transition">
                 Alo 181'i Ara
+              </a>
+
+              {/* Desktop Web Link Button */}
+              <a href="https://181.csb.gov.tr/" target="_blank" rel="noreferrer" className="hidden lg:block w-full text-center py-2 bg-csb-blue text-white text-sm font-bold rounded shadow hover:bg-blue-700 transition">
+                Alo 181 Web Sitesi
               </a>
             </div>
           </div>

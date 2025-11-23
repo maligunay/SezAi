@@ -59,14 +59,29 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
              >
                csb.gov.tr
              </a>
+             
+             {/* Alo 181 - Desktop Version (Web Link) */}
              <a 
-               href="tel:181" 
-               className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
+               href="https://181.csb.gov.tr/" 
+               target="_blank"
+               rel="noreferrer"
+               className="hidden sm:inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
              >
-               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:mr-2 text-csb-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-csb-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-               <span className="hidden sm:inline">Alo 181</span>
+               Alo 181 Web
+             </a>
+
+             {/* Alo 181 - Mobile Version (Call Link) */}
+             <a 
+               href="tel:181" 
+               className="sm:hidden inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none"
+             >
+               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-csb-red" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+               <span className="ml-1">181</span>
              </a>
           </div>
         </div>
