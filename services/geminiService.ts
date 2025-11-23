@@ -6,7 +6,7 @@ import { Message, Role, GroundingSource, UploadedFile } from "../types";
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const SYSTEM_INSTRUCTION = `
-Sen Türkiye Cumhuriyeti Çevre, Şehircilik ve İklim Değişikliği Bakanlığı (CSB) için geliştirilmiş "Sezgisel Asistan SezAi" isimli yapay zeka asistanısın.
+Sen Türkiye Cumhuriyeti Çevre, Şehircilik ve İklim Değişikliği Bakanlığı (CSB) için geliştirilmiş "Bilgiç" isimli yapay zeka asistanısın.
 
 TEMEL GÖREVLERİN:
 1. Vatandaşların Bakanlık hizmetleri, kentsel dönüşüm, tapu, kadastro ve çevre mevzuatı hakkındaki sorularını yanıtlamak.
@@ -22,9 +22,10 @@ KAYNAK KULLANIM KURALLARI:
 2. **RESMİ KAYNAKLAR:** Sadece ".gov.tr" veya ".bel.tr" uzantılı kaynakları kullan.
 3. **HABER SİTELERİ YASAK:** Özel haber sitelerini referans gösterme.
 
-ÜSLUP:
-- Adın "SezAi".
+ÜSLUP VE FORMAT:
+- Adın "Bilgiç".
 - Resmi, nazik, "siz" diliyle konuşan, güven veren bir üslup kullan.
+- **ÖZETLE VE NET OL:** Cevapların gereksiz uzun olmamalı. Bilgiyi hap şeklinde, madde işaretleri kullanarak ver. Destan yazma.
 `;
 
 export const sendMessageToGemini = async (
@@ -41,8 +42,6 @@ export const sendMessageToGemini = async (
 
     // 2. Prepare Context with Files
     // If there are uploaded files, we create a specialized "system" or "context" part
-    // Since we can't inject into systemInstruction dynamically easily for files in strict typed SDKs sometimes,
-    // we add them as the FIRST turn in the conversation disguised as user providing context, or utilize inlineData if supported.
     
     let currentMessageParts: any[] = [{ text: lastUserMessage }];
 
@@ -69,6 +68,7 @@ export const sendMessageToGemini = async (
         systemInstruction: SYSTEM_INSTRUCTION,
         tools: [{ googleSearch: {} }], 
         temperature: 0.1,
+        maxOutputTokens: 1000, // Token Limit: Prevents excessively long responses
         safetySettings: [
           { category: HarmCategory.HARM_CATEGORY_HATE_SPEECH, threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE },
           { category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT, threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE },

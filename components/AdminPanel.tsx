@@ -73,7 +73,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, files, 
         
         {/* Header */}
         <div className="bg-csb-blue px-6 py-4 flex justify-between items-center">
-          <h3 className="text-white font-bold text-lg">Yönetici Paneli - SezAi Bilgi Bankası</h3>
+          <h3 className="text-white font-bold text-lg">Yönetici Paneli - Bilgiç Bilgi Bankası</h3>
           <button onClick={onClose} className="text-white hover:text-gray-200">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -106,7 +106,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, files, 
               <div className="border-b border-gray-100 pb-4">
                 <h4 className="font-semibold text-gray-800 mb-2">Dosya Yükle (Eğitim Verisi)</h4>
                 <p className="text-xs text-gray-500 mb-3">
-                  SezAi'nin soruları cevaplarken kullanması için PDF veya TXT dosyaları yükleyin. Word dosyalarını PDF'e çevirerek yükleyiniz.
+                  Bilgiç'in soruları cevaplarken kullanması için PDF veya TXT dosyaları yükleyin. Word dosyalarını PDF'e çevirerek yükleyiniz.
                 </p>
                 <div className="flex gap-2">
                   <input 

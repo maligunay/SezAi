@@ -24,11 +24,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
 
             {/* Emblem and Titles */}
             <div className="flex items-center gap-3">
-              {/* SezAi Custom Logo */}
+              {/* Bilgiç Custom Logo */}
               <div className="relative h-16 w-16 flex-shrink-0 -ml-2">
                  <img 
                     src="/sezai-logo.png" 
-                    alt="SezAi Robot" 
+                    alt="Bilgiç Robot" 
                     className="h-full w-full object-contain drop-shadow-md"
                     onError={(e) => {
                         // Fallback: Eco-Friendly Robot Icon if local file is missing

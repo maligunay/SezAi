@@ -74,7 +74,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
           ) : (
              <img 
                 src="/sezai-logo.png" 
-                alt="SezAi" 
+                alt="Bilgiç" 
                 className="h-full w-full object-contain" 
                 onError={(e) => {
                    (e.target as HTMLImageElement).src = 'https://cdn-icons-png.flaticon.com/512/1786/1786548.png';

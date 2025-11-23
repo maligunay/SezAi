@@ -8,12 +8,19 @@ interface ChatInterfaceProps {
   knowledgeBase?: UploadedFile[];
 }
 
+const MAX_CHARS = 500; // Limit 500 karaktere çekildi
+const MAX_MESSAGES_PER_SESSION = 15; // Oturum başına maksimum mesaj sayısı
+
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({ knowledgeBase = [] }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId] = useState(() => generateSessionId());
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Kullanıcının kaç mesaj attığını hesapla
+  const userMessageCount = messages.filter(m => m.role === Role.USER).length;
+  const isSessionFinished = userMessageCount >= MAX_MESSAGES_PER_SESSION;
 
   // Initial greeting
   useEffect(() => {
@@ -36,11 +43,18 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ knowledgeBase = []
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    if (text.length <= MAX_CHARS) {
+      setInput(text);
+    }
+  };
 
-    // Security: Input Sanitization
-    const sanitizedInput = input.trim().slice(0, 500);
+  const handleSend = async () => {
+    if (!input.trim() || isLoading || isSessionFinished) return;
+
+    // Security: Input Sanitization (Double check)
+    const sanitizedInput = input.trim().slice(0, MAX_CHARS);
     
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -104,7 +118,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ knowledgeBase = []
             </svg>
             Aktif Bilgi Bankası: <b>{knowledgeBase.length} Doküman</b>
           </span>
-          <span className="text-[10px] text-blue-400">SezAi cevaplarken bunları kullanacak</span>
+          <span className="text-[10px] text-blue-400">Bilgiç cevaplarken bunları kullanacak</span>
         </div>
       )}
 
@@ -130,46 +144,70 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ knowledgeBase = []
               </div>
            </div>
         )}
+        
+        {/* Session Limit Warning inside chat flow */}
+        {isSessionFinished && (
+            <div className="flex justify-center my-4">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm flex items-center shadow-sm">
+                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Günlük soru limitine (15 adet) ulaştınız. Yeni bir sohbet için lütfen sayfayı yenileyiniz.</span>
+                </div>
+            </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
       <div className="p-4 bg-white border-t border-gray-200">
-        <div className="max-w-4xl mx-auto relative flex items-end gap-2">
-          <div className="relative flex-1">
-             <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={knowledgeBase.length > 0 ? "Dokümanlar veya bakanlık hizmetleri hakkında sorun..." : "Bakanlık hizmetleri hakkında bir soru sorun..."}
-                className="w-full pl-4 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-csb-blue focus:border-csb-blue resize-none text-gray-700 placeholder-gray-400 shadow-sm focus:bg-white transition-all max-h-32"
-                rows={1}
-                style={{ minHeight: '48px' }}
-             />
+        <div className="max-w-4xl mx-auto relative flex flex-col gap-1">
+          <div className="relative flex items-end gap-2">
+            <div className="relative flex-1">
+              <textarea
+                  value={input}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  disabled={isSessionFinished}
+                  placeholder={isSessionFinished ? "Oturum sonlandı." : (knowledgeBase.length > 0 ? "Dokümanlar veya bakanlık hizmetleri hakkında sorun..." : "Bakanlık hizmetleri hakkında bir soru sorun...")}
+                  className={`w-full pl-4 pr-4 py-3 border rounded-2xl focus:ring-2 focus:ring-csb-blue focus:border-csb-blue resize-none shadow-sm transition-all max-h-32 ${
+                      isSessionFinished 
+                      ? 'bg-gray-100 border-gray-300 text-gray-400 cursor-not-allowed' 
+                      : 'bg-gray-50 border-gray-300 text-gray-700 placeholder-gray-400 focus:bg-white'
+                  }`}
+                  rows={1}
+                  style={{ minHeight: '48px' }}
+              />
+            </div>
+            <button
+              onClick={handleSend}
+              disabled={!input.trim() || isLoading || isSessionFinished}
+              className={`flex items-center justify-center h-12 w-12 rounded-full shadow-md transition-all duration-200 ${
+                !input.trim() || isLoading || isSessionFinished
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-csb-red text-white hover:bg-red-700 hover:scale-105 active:scale-95'
+              }`}
+            >
+              {isLoading ? (
+                <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform rotate-90 ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              )}
+            </button>
           </div>
-          <button
-            onClick={handleSend}
-            disabled={!input.trim() || isLoading}
-            className={`flex items-center justify-center h-12 w-12 rounded-full shadow-md transition-all duration-200 ${
-              !input.trim() || isLoading
-                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                : 'bg-csb-red text-white hover:bg-red-700 hover:scale-105 active:scale-95'
-            }`}
-          >
-            {isLoading ? (
-               <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-               </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform rotate-90 ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-            )}
-          </button>
-        </div>
-        <div className="text-center mt-2">
-           <p className="text-[10px] text-gray-400">SezAi hatalı bilgi verebilir. Resmi kaynakları teyit ediniz.</p>
+          {/* Character Counter */}
+          <div className="flex justify-between px-2">
+            <span className="text-[10px] text-gray-400">Bilgiç hatalı bilgi verebilir. Resmi kaynakları teyit ediniz.</span>
+            <span className={`text-[10px] font-medium ${input.length >= MAX_CHARS ? 'text-red-500' : 'text-gray-400'}`}>
+              {isSessionFinished ? `15/15 Mesaj` : `${input.length}/${MAX_CHARS}`}
+            </span>
+          </div>
         </div>
       </div>
     </div>
