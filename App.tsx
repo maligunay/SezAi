@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChatInterface } from './components/ChatInterface';
 import { Header } from './components/Header';
 import { Disclaimer } from './components/Disclaimer';
@@ -6,10 +6,32 @@ import { Sidebar } from './components/Sidebar';
 import { AdminPanel } from './components/AdminPanel';
 import { UploadedFile } from './types';
 
+const STORAGE_KEY = 'bilgic_knowledge_base_v1';
+
 export default function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  
+  // State başlatılırken önce LocalStorage kontrol ediliyor (Persistent Memory)
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>(() => {
+    try {
+      const savedFiles = localStorage.getItem(STORAGE_KEY);
+      return savedFiles ? JSON.parse(savedFiles) : [];
+    } catch (error) {
+      console.error("Hafıza okuma hatası:", error);
+      return [];
+    }
+  });
+
+  // Dosya listesi her değiştiğinde LocalStorage güncelleniyor
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(uploadedFiles));
+    } catch (error) {
+      console.error("Depolama alanı hatası:", error);
+      alert("Tarayıcı hafızası doldu! Son yüklediğiniz dosya kaydedilememiş olabilir. Lütfen gereksiz dosyaları silin.");
+    }
+  }, [uploadedFiles]);
 
   return (
     <div className="flex h-screen flex-col bg-gray-50 text-gray-900">

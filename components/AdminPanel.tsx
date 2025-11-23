@@ -41,6 +41,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, files, 
         continue;
       }
 
+      // Dosya boyutu kontrolü (LocalStorage limiti için basit önlem - 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+         alert(`${file.name} çok büyük. Lütfen 2MB altındaki dosyaları yükleyin veya metni parçalara bölün.`);
+         continue;
+      }
+
       // Read file as Base64
       const reader = new FileReader();
       const promise = new Promise<void>((resolve) => {
@@ -64,7 +70,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, files, 
   };
 
   const removeFile = (id: string) => {
-    onFilesChange(files.filter(f => f.id !== id));
+    if(window.confirm("Bu dokümanı kalıcı hafızadan silmek istediğinize emin misiniz?")) {
+        onFilesChange(files.filter(f => f.id !== id));
+    }
   };
 
   return (
@@ -73,7 +81,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, files, 
         
         {/* Header */}
         <div className="bg-csb-blue px-6 py-4 flex justify-between items-center">
-          <h3 className="text-white font-bold text-lg">Yönetici Paneli - Bilgiç Bilgi Bankası</h3>
+          <h3 className="text-white font-bold text-lg">Yönetici Paneli - Bilgiç Hafıza Yönetimi</h3>
           <button onClick={onClose} className="text-white hover:text-gray-200">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -104,9 +112,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, files, 
           ) : (
             <div className="space-y-6">
               <div className="border-b border-gray-100 pb-4">
-                <h4 className="font-semibold text-gray-800 mb-2">Dosya Yükle (Eğitim Verisi)</h4>
+                <h4 className="font-semibold text-gray-800 mb-2">Bilgi Bankasına Veri Ekle</h4>
                 <p className="text-xs text-gray-500 mb-3">
-                  Bilgiç'in soruları cevaplarken kullanması için PDF veya TXT dosyaları yükleyin. Word dosyalarını PDF'e çevirerek yükleyiniz.
+                  Bilgiç'in soruları cevaplarken kullanması için PDF veya TXT dosyaları yükleyin. Bu dosyalar kalıcı olarak saklanır.
                 </p>
                 <div className="flex gap-2">
                   <input 
@@ -130,7 +138,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, files, 
               </div>
 
               <div>
-                <h4 className="font-semibold text-gray-800 mb-2">Yüklü Dosyalar ({files.length})</h4>
+                <h4 className="font-semibold text-gray-800 mb-2">Kalıcı Dosyalar ({files.length})</h4>
                 {files.length === 0 ? (
                   <p className="text-sm text-gray-400 italic">Henüz dosya yüklenmedi.</p>
                 ) : (
@@ -147,7 +155,8 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, files, 
                         </span>
                         <button 
                           onClick={() => removeFile(file.id)}
-                          className="text-red-500 hover:text-red-700"
+                          className="text-red-500 hover:text-red-700 transition"
+                          title="Kalıcı olarak sil"
                         >
                           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -159,8 +168,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ isOpen, onClose, files, 
                 )}
               </div>
               
-              <div className="bg-yellow-50 p-3 rounded text-xs text-yellow-700 border border-yellow-200">
-                Not: Yüklediğiniz dosyalar tarayıcı hafızasında tutulur. Sayfa yenilendiğinde veriler sıfırlanır (Demo modu).
+              <div className="bg-green-50 p-3 rounded text-xs text-green-800 border border-green-200 flex items-start">
+                 <svg className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                 </svg>
+                 <span>
+                    <strong>Güvenli Depolama:</strong> Yüklediğiniz dosyalar tarayıcınızın güvenli hafızasına kaydedildi. 
+                    Sayfayı yenileseniz veya bilgisayarı kapatsanız bile <u>siz silene kadar</u> burada kalacaklar.
+                 </span>
               </div>
             </div>
           )}
